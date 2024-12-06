@@ -1,0 +1,16 @@
+ip = "192.168.0.42" # This is your device's ip
+socket_name = "coffee"
+port = 30000
+socket = socket_open(ip, port, socket_name)
+
+while(True):
+
+# receive the expected 3 floating point indexes of an array
+receive = socket_read_ascii_float(3,socket_name)
+textmsg(receive)
+
+# send a message
+socket_send_string("String cheese", socket_name) 
+end
+
+socket_close(socket_name)
