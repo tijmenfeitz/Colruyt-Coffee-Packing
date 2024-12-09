@@ -27,13 +27,17 @@ while True:
     root.title("Coffee")
 
     # Set the size of the window
-    root.geometry("200x100")
+    root.geometry("200x200")
 
     def button_pressed(weight):
     # If statements to check which button was pressed
         if weight == "250g":
             print("You selected 250g!")
             clientsocket.send(bytes("(250)", "ascii"))
+        elif weight == "500g":
+            print("The 500g selection is not yet supported.")
+        elif weight == "1kg":
+            print("The 1kg selection is not yet supported.")
         elif weight == "2,5kg":
             print("You selected 2,5kg!")
             clientsocket.send(bytes("(2.5)", "ascii"))
@@ -43,6 +47,12 @@ while True:
     # Create buttons
     button_250g = tk.Button(root, text="250g", command=lambda: button_pressed("250g"))
     button_250g.pack(pady=10)
+
+    button_500g = tk.Button(root, text="500g", command=lambda: button_pressed("500g"))
+    button_500g.pack(pady=10)
+
+    button_1kg = tk.Button(root, text="1kg", command=lambda: button_pressed("1kg"))
+    button_1kg.pack(pady=10)
 
     button_2_5kg = tk.Button(root, text="2,5kg", command=lambda: button_pressed("2,5kg"))
     button_2_5kg.pack(pady=10)
