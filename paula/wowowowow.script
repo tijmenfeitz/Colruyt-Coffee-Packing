@@ -1,8 +1,6 @@
 socket_open("192.168.0.80", 30000)
 set_digital_out(1, True)
 
-
-
 # Main loop
 while True:
     mess = socket_read_byte_list(3)
@@ -17,7 +15,7 @@ while True:
             movel(BeltUp)
 
             # Set payload and pick up bags
-            if program == 250:
+            if program == 0.25:
                 movel()  # Move to 250g bags
                 set_payload(5.0, [0.0, 0.0, 0.0])  # Payload for 250g bags
                 set_digital_out(0, False)  # Close gripper
