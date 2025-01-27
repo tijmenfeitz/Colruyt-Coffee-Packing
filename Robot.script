@@ -1,49 +1,57 @@
+
 socket_open("192.168.0.185", 30000)
 set_digital_out(0, True)
 
 # Base position
 home = p[-0.802442,0.171133,0.863442,2.19829,-2.2339,0.0670559]
 
-# Grab positions (updated)
+#------------------------------------250-------------------------------------------------
+
+# Grab positions 
 pickupLeft = p[-0.697873, -0.540173, 0.161892, -2.18482, 2.18736, 0.0450819]
-aboveLeft = p[-0.697852, -0.540214, 0.31588, -2.18484, 2.18735, 0.0451003]  # Above left grab position
+aboveLeft = p[-0.697852, -0.540214, 0.31588, -2.18484, 2.18735, 0.0451003]
 pickupRight = p[-0.697882, -0.367876, 0.163691, -2.18473, 2.18727, 0.0451668]
-aboveRight = p[-0.697852, -0.367876, 0.31588, -2.18484, 2.18735, 0.0451003]  # Above right grab position
+aboveRight = p[-0.697852, -0.367876, 0.31588, -2.18484, 2.18735, 0.0451003]
 
 # Stage 1 positions
-aboveBox1 = p[-0.736681, 0.206807, 0.605355, 0.0458706, 3.11063, 0.0397287]
-insideBox1 = p[-0.736724, 0.206846, 0.24846, 0.0459811, 3.11046, 0.0396672]
+aboveBox1 = p[-0.736681, 0.206807, 0.605355, -0.0236563, 3.11154, 0.0406951]
+insideBox1 = p[-0.736681, 0.206807, 0.248918, -0.0236563, 3.11154, 0.0406951]
+
 
 # Stage 2 positions
-aboveBox2 = p[-0.773845, 0.206565, 0.592384, 0.0457109, 3.11059, 0.0396288]
-insideBox2 = p[-0.773843, 0.206575, 0.248918, 0.0458998, 3.11045, 0.0396967]
+aboveBox2 = p[-0.763335, 0.206565, 0.592384, -0.0236563, 3.11154, 0.0406951]
+insideBox2 = p[-0.772303,0.208367,0.293877,-0.0239014,3.11151,0.0406111]
 
-last = p[-0.764459,0.20835,0.596533,-0.0439619,-2.35529,0.00333879]
+#old
+#p[-0.763335, 0.206575, 0.32812, -0.0236563, 3.11154, 0.0406951]
+
+
+last = p[-0.764459,0.20835,0.656533,-0.0439619,-2.35529,0.00333879]
 lastInside = p[-0.76445,0.208295,0.454766,-0.0437638,-2.35536,0.00335891]
 
-#-------------------------------------------------------------------------------------------------
+#------------------------------------2.5-------------------------------------------------
 
-# 2.5kg bags
-bLeft_Grab = p[-0.786419, -0.589495, 0.381716, -2.15839, -2.12466, -0.0584509]
-bRight_Grab = p[-0.794117, -0.435171, 0.395713, -2.15857, -2.12455, -0.0581579]
+bPickupLeft = p[-0.77457, -0.538519, 0.384903, 2.12682,-2.16884,0.0828811]
+bAboveLeft = p[-0.77457, -0.538519, 0.570805, 2.12676,-2.1687,0.0828203]
+bPickupRight = p[-0.785863,-0.374606,0.366997,2.15634,-2.16781,0.0897502]
+bAboveRight = p[-0.785863,-0.374606,0.570795,2.1561,-2.16769,0.0896678]
 
-# 2.5kg bags
-bAbove_Box = p[-0.778278, 0.14738, 1.01338, -2.17159, -2.14732, 0.198483]
+bInsideBox = p[-0.8187,0.210957,0.480519,2.17339,-2.24495,0.0681295]
+bAboveBox = p[-0.831439,0.211103,0.962729,2.18,-2.25256,0.0863733]
 
-#-------------------------------------------------------------------------------------------------
+bBeforeAbove = p[-0.809176, -0.218774, 0.977078, 2.19215, -2.21965, 0.100173]
+
+#-------------------------------------------------------------------------------------
 
 
-# Main loop
 while True:
     mess = socket_read_byte_list(3)
     while True:
         mess = socket_read_byte_list(3)
         bytes = mess
-        
         if bytes[1] > -1:
             break
         end
-        
         sleep(0.1)
     end
 
@@ -56,54 +64,54 @@ while True:
             movel(home)
 
             if program == 1:
-                movel(pose_add(pickupLeft, p[0.0, 0.0, 0.2, 0.0, 0.0, 0.0]))  # Above left grab
+                movel(pose_add(pickupLeft, p[0.0, 0.0, 0.2, 0.0, 0.0, 0.0]))
                 movel(pickupLeft)
                 set_digital_out(2, True)
                 sleep(0.2)
                 set_payload(2.1, [0.0, 0.0, 0.0])
-                movel(pose_add(aboveLeft, p[0.0, 0.0, 0.2, 0.0, 0.0, 0.0]))  # Raise after grab
+                movel(pose_add(aboveLeft, p[0.0, 0.0, 0.2, 0.0, 0.0, 0.0]))
 
-                movel(pose_add(pickupRight, p[0.0, 0.0, 0.2, 0.0, 0.0, 0.0]))  # Above right grab
+                movel(pose_add(pickupRight, p[0.0, 0.0, 0.2, 0.0, 0.0, 0.0]))
                 movel(pickupRight)
                 set_digital_out(1, True)
                 sleep(0.2)
                 set_payload(2.6, [0.0, 0.0, 0.0])
-                movel(pose_add(aboveRight, p[0.0, 0.0, 0.2, 0.0, 0.0, 0.0]))  # Raise after grab
+                movel(pose_add(aboveRight, p[0.0, 0.0, 0.2, 0.0, 0.0, 0.0]))
 
                 movel(aboveBox1)
-                movel(insideBox1)  # Lower to inside box 1
+                movel(insideBox1)
                 set_digital_out(1, False)
                 set_digital_out(2, False)
                 set_payload(1.6, [0.0, 0.0, 0.0])
                 movel(aboveBox1)
 
-                movel(pose_add(pickupLeft, p[0.0, 0.0, 0.2, 0.0, 0.0, 0.0]))  # Above left grab
+                movel(pose_add(pickupLeft, p[0.0, 0.0, 0.2, 0.0, 0.0, 0.0]))
                 movel(pickupLeft)
                 set_digital_out(2, True)
                 sleep(0.2)
                 set_payload(2.1, [0.0, 0.0, 0.0])
-                movel(pose_add(aboveLeft, p[0.0, 0.0, 0.2, 0.0, 0.0, 0.0]))  # Raise after grab
+                movel(pose_add(aboveLeft, p[0.0, 0.0, 0.2, 0.0, 0.0, 0.0]))
 
-                movel(pose_add(pickupRight, p[0.0, 0.0, 0.2, 0.0, 0.0, 0.0]))  # Above right grab
+                movel(pose_add(pickupRight, p[0.0, 0.0, 0.2, 0.0, 0.0, 0.0]))
                 movel(pickupRight)
                 set_digital_out(1, True)
                 sleep(0.2)
                 set_payload(2.6, [0.0, 0.0, 0.0])
-                movel(pose_add(aboveRight, p[0.0, 0.0, 0.2, 0.0, 0.0, 0.0]))  # Raise after grab
+                movel(pose_add(aboveRight, p[0.0, 0.0, 0.2, 0.0, 0.0, 0.0]))
 
                 movel(aboveBox2)
-                movel(insideBox2)  # Lower to inside box 2
+                movel(insideBox2)
                 set_digital_out(1, False)
                 set_digital_out(2, False)
                 set_payload(1.6, [0.0, 0.0, 0.0])
                 movel(aboveBox2)
 
-                movel(pose_add(pickupLeft, p[0.0, 0.0, 0.2, 0.0, 0.0, 0.0]))  # Above right grab
+                movel(pose_add(pickupLeft, p[0.0, 0.0, 0.2, 0.0, 0.0, 0.0]))
                 movel(pickupLeft)
                 set_digital_out(2, True)
                 sleep(0.2)
                 set_payload(2.6, [0.0, 0.0, 0.0])
-                movel(pose_add(aboveLeft, p[0.0, 0.0, 0.2, 0.0, 0.0, 0.0]))  # Raise after grab
+                movel(pose_add(aboveLeft, p[0.0, 0.0, 0.2, 0.0, 0.0, 0.0]))
                 movel(last)
                 movel(lastInside)
                 set_digital_out(2, False)
@@ -112,47 +120,58 @@ while True:
             end
 
             if program == 4:
-                movel(pose_add(bLeft_Grab, p[0.0, 0.0, 0.2, 0.0, 0.0, 0.0]))  # Above left grab
-                movel(bLeft_Grab)
+                movel(home)
+
+                # Pick left 2.5kg
+                movel(bAboveLeft)
+                movel(bPickupLeft)
+                sleep(0.4)
                 set_digital_out(2, True)
-                sleep(0.3)
-                set_payload(7.5, [0.0, 0.0, 0.0])
-                movel(pose_add(bLeft_Grab, p[0.0, 0.0, 0.2, 0.0, 0.0, 0.0]))  # Raise after grab
+                set_payload(6.6, [0.0, 0.0, 0.0])
+                sleep(0.1)
+                movel(bAboveLeft)
 
-                movel(pose_add(bRight_Grab, p[0.0, 0.0, 0.2, 0.0, 0.0, 0.0]))  # Above right grab
-                movel(bRight_Grab)
+                # Pick right 2.5kg
+                movel(bAboveRight)
+                sleep(3)
+                movel(bPickupRight)
+
+                sleep(0.3)
                 set_digital_out(1, True)
+                set_payload(11.6, [0.0, 0.0, 0.0])
                 sleep(0.3)
-                set_payload(12.5, [0.0, 0.0, 0.0])
-                movel(pose_add(bRight_Grab, p[0.0, 0.0, 0.2, 0.0, 0.0, 0.0]))  # Raise after grab
+                movel(bAboveRight)
 
-                movel(bAbove_Box)
-                movel(pose_add(bAbove_Box, p[0.0, 0.0, -0.3, 0.0, 0.0, 0.0]))  # Lower to place
+                # Move to box
+                movel(bBeforeAbove)
+                sleep(0.1)
+                movel(bAboveBox)
+                sleep(3)
+                movel(bInsideBox)
                 set_digital_out(1, False)
                 set_digital_out(2, False)
-                set_payload(2.5, [0.0, 0.0, 0.0])
-                movel(bAbove_Box)
+                set_payload(1.6, [0.0, 0.0, 0.0])
+          
             end
 
-            mess=socket_read_byte_list(3)
+            mess = socket_read_byte_list(3)
             movel(home)
-            set_digital_out(5, True)
-            sleep(2)
             socket_send_byte(99)
+            sleep(2)
+            #set_digital_out(5, True)
             sleep(6)
-            set_digital_out(5, False)
+            #set_digital_out(5, False)
             program = 0
             textmsg(mess)
-
         else:
             textmsg("Waiting for bags or box.")
             textmsg(mess)
-            sleep(0.1)  # Avoid busy waiting
+            sleep(0.1)
         end
     else:
         textmsg("out")
         textmsg(mess)
-        sleep(0.1)  # Avoid busy waiting
+        sleep(0.1)
     end
 end
 end

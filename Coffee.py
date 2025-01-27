@@ -7,6 +7,7 @@ import cv2
 from ultralytics import YOLO
 import struct
 import threading
+import subprocess
 
 # Define TCP connection parameters
 UR10_IP = "192.168.0.43"
@@ -49,12 +50,14 @@ def read_sensor():
         global data
         data[1] = 1 if sensor_box.read() == 0 else 0
     except BlockingIOError:
-            pass
-    
+        pass
+
 
 def detect_bags():
-    print("inside detect")
     global data
+    print("inside detect")
+    print("", data)
+    
     try:
         while running:
             cap = cv2.VideoCapture(0)
@@ -70,7 +73,7 @@ def detect_bags():
             frame_resized = cv2.resize(frame, (640, 480))
             results = model(frame_resized)
           
-            bags_detected = sum([1 for box in results[0].boxes if int(box.cls) == 1])
+            bags_detected = sum([1 for box in results[0].boxes if int(box.cls) == 0])
          
             if data[2] == 1:
                 if bags_detected < 10:
@@ -103,22 +106,27 @@ def detect_bags():
         
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------
 def wait_for_robot_signal():
+    global received_value
     while running:  
         try:
-            
             final = client_socket.recv(1)
             if final:  
                 received_value = struct.unpack('B', final)[0]  
                 print(f"Received data from robot: {received_value}")
 
                 if received_value == 99:  
-                    print("Robot sent reset signal.")
-                    return  
+                    print("Robot sent reset signal. Calling servo script...")
+                    
+                    subprocess.run(["python3", "servo.py"], check=True)
+                    
+                    received_value = 0
+                    return
         except socket.timeout:
             pass 
         except Exception as e:
             print(f"Error while waiting for robot signal: {e}")
             break
+
 
 def main_loop():
     global data
@@ -172,7 +180,14 @@ window.title("Coffee Selector")
 window.attributes("-fullscreen", True)
 window.configure(bg="white")
 
-# Logo
+# University logo (top-left corner)
+uni_logo = Image.open("uniLogo.png")
+uni_logo = uni_logo.resize((200, 70), Image.Resampling.LANCZOS)  
+uni_logo = ImageTk.PhotoImage(uni_logo)
+uni_logo_label = tk.Label(window, image=uni_logo, bg="white")
+uni_logo_label.place(x=10, y=10)  
+
+# Company Logo (centered)
 logo = Image.open("logo.png")
 logo = ImageTk.PhotoImage(logo)
 logo_label = tk.Label(window, image=logo, bg="white")
